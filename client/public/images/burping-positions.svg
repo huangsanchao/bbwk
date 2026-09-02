@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" width="900" height="520">
+  <defs>
+    <style>
+      .bg { fill: #f8fdf8; }
+      .title { font-family: 'Microsoft YaHei', sans-serif; font-size: 24px; font-weight: bold; fill: #303133; }
+      .subtitle { font-family: 'Microsoft YaHei', sans-serif; font-size: 16px; fill: #606266; }
+      .label { font-family: 'Microsoft YaHei', sans-serif; font-size: 14px; font-weight: bold; fill: #303133; }
+      .step-num { font-family: 'Arial', sans-serif; font-size: 20px; font-weight: bold; fill: white; }
+      .tip-text { font-family: 'Microsoft YaHei', sans-serif; font-size: 13px; fill: #67c23a; }
+      .card { fill: white; stroke: #e8f5e9; stroke-width: 2; rx: 12; }
+      .badge { fill: #67c23a; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect class="bg" width="900" height="520" rx="16"/>
+
+  <!-- Title -->
+  <text x="450" y="42" text-anchor="middle" class="title">🍼 宝宝拍嗝三种常用姿势</text>
+  <text x="450" y="64" text-anchor="middle" class="subtitle">喂奶后及时拍嗝，有效预防吐奶和胀气</text>
+
+  <!-- Card 1: 肩上拍嗝 -->
+  <g transform="translate(30, 85)">
+    <rect class="card" width="260" height="380" rx="12"/>
+
+    <!-- Badge -->
+    <rect class="badge" x="16" y="16" width="32" height="32" rx="16"/>
+    <text x="32" y="38" text-anchor="middle" class="step-num">1</text>
+
+    <!-- Illustration: Over-shoulder -->
+    <g transform="translate(130, 180)">
+      <!-- Parent body (simplified) -->
+      <ellipse cx="0" cy="80" rx="45" ry="65" fill="#e3f2fd" opacity="0.5"/>
+      <!-- Parent head -->
+      <circle cx="0" cy="-40" r="22" fill="#ffccbc"/>
+      <!-- Parent shoulder line -->
+      <path d="M-45,10 Q0,-15 45,10" fill="none" stroke="#90caf9" stroke-width="3"/>
+
+      <!-- Baby on shoulder -->
+      <!-- Baby body -->
+      <rect x="-18" y="-50" width="36" height="55" rx="10" fill="#fff9c4" stroke="#ffd54f" stroke-width="2"/>
+      <!-- Baby head -->
+      <circle cx="0" cy="-65" r="16" fill="#ffccbc" stroke="#ff8a65" stroke-width="1.5"/>
+      <!-- Baby eyes -->
+      <circle cx="-5" cy="-67" r="2" fill="#303133"/>
+      <circle cx="5" cy="-67" r="2" fill="#303133"/>
+      <!-- Baby smile -->
+      <path d="M-4,-60 Q0,-56 4,-60" fill="none" stroke="#303133" stroke-width="1.5"/>
+      <!-- Baby arm -->
+      <path d="M18,-40 Q30,-35 28,-25" fill="none" stroke="#ffccbc" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- Hand patting back -->
+      <ellipse cx="-30" cy="-35" rx="10" ry="8" fill="#ffccbc" stroke="#ff8a65" stroke-width="1.5"/>
+      <!-- Pat motion lines -->
+      <path d="M-38,-45 Q-42,-50 -36,-55" fill="none" stroke="#42a5f5" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <path d="M-38,-40 Q-44,-44 -40,-50" fill="none" stroke="#42a5f5" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+      <!-- Arrow showing patting direction -->
+      <path d="M-35,-55 L-35,-65" fill="none" stroke="#42a5f5" stroke-width="2" marker-end="url(#arrowhead)"/>
+    </g>
+
+    <!-- Label -->
+    <text x="130" y="290" text-anchor="middle" class="label">肩上拍嗝法</text>
+    <text x="130" y="315" text-anchor="middle" class="subtitle" font-size="12">最常用、最适合新生儿</text>
+
+    <!-- Steps -->
+    <text x="24" y="340" class="tip-text" font-size="12">• 让宝宝趴在妈妈肩上</text>
+    <text x="24" y="358" class="tip-text" font-size="12">• 一手托住宝宝臀部</text>
+    <text x="24" y="376" class="tip-text" font-size="12">• 另一手空心掌轻拍背部</text>
+  </g>
+
+  <!-- Card 2: 坐姿拍嗝 -->
+  <g transform="translate(320, 85)">
+    <rect class="card" width="260" height="380" rx="12"/>
+
+    <!-- Badge -->
+    <rect class="badge" x="16" y="16" width="32" height="32" rx="16"/>
+    <text x="32" y="38" text-anchor="middle" class="step-num">2</text>
+
+    <!-- Illustration: Sitting on lap -->
+    <g transform="translate(130, 180)">
+      <!-- Parent lap (simplified) -->
+      <ellipse cx="0" cy="80" rx="55" ry="25" fill="#e3f2fd" opacity="0.5"/>
+
+      <!-- Baby sitting upright -->
+      <!-- Baby body -->
+      <rect x="-15" y="-30" width="30" height="55" rx="10" fill="#fff9c4" stroke="#ffd54f" stroke-width="2"/>
+      <!-- Baby head (larger) -->
+      <circle cx="0" cy="-48" r="18" fill="#ffccbc" stroke="#ff8a65" stroke-width="1.5"/>
+      <!-- Baby eyes -->
+      <circle cx="-6" cy="-50" r="2" fill="#303133"/>
+      <circle cx="6" cy="-50" r="2" fill="#303133"/>
+      <!-- Baby smile -->
+      <path d="M-4,-43 Q0,-39 4,-43" fill="none" stroke="#303133" stroke-width="1.5"/>
+
+      <!-- Parent hand supporting chin -->
+      <path d="M-20,-45 Q-30,-40 -25,-30" fill="none" stroke="#ffccbc" stroke-width="7" stroke-linecap="round"/>
+
+      <!-- Parent other hand patting back -->
+      <ellipse cx="28" cy="-15" rx="10" ry="8" fill="#ffccbc" stroke="#ff8a65" stroke-width="1.5"/>
+      <!-- Pat motion lines -->
+      <path d="M35,-25 Q40,-30 34,-35" fill="none" stroke="#42a5f5" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <path d="M35,-20 Q42,-24 38,-30" fill="none" stroke="#42a5f5" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+      <!-- Baby legs -->
+      <path d="M-8,25 L-10,50" fill="none" stroke="#ffccbc" stroke-width="6" stroke-linecap="round"/>
+      <path d="M8,25 L10,50" fill="none" stroke="#ffccbc" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- Arrow showing patting direction -->
+      <path d="M30,-35 L30,-45" fill="none" stroke="#42a5f5" stroke-width="2"/>
+    </g>
+
+    <!-- Label -->
+    <text x="130" y="290" text-anchor="middle" class="label">坐姿拍嗝法</text>
+    <text x="130" y="315" text-anchor="middle" class="subtitle" font-size="12">适合 3 个月以上宝宝</text>
+
+    <!-- Steps -->
+    <text x="24" y="340" class="tip-text" font-size="12">• 让宝宝坐在大人腿上</text>
+    <text x="24" y="358" class="tip-text" font-size="12">• 一手虎口托住宝宝下巴</text>
+    <text x="24" y="376" class="tip-text" font-size="12">• 身体略前倾，轻拍背部</text>
+  </g>
+
+  <!-- Card 3: 趴卧拍嗝 -->
+  <g transform="translate(610, 85)">
+    <rect class="card" width="260" height="380" rx="12"/>
+
+    <!-- Badge -->
+    <rect class="badge" x="16" y="16" width="32" height="32" rx="16"/>
+    <text x="32" y="38" text-anchor="middle" class="step-num">3</text>
+
+    <!-- Illustration: Lying on lap -->
+    <g transform="translate(130, 180)">
+      <!-- Parent lap -->
+      <ellipse cx="0" cy="30" rx="70" ry="30" fill="#e3f2fd" opacity="0.5"/>
+      <!-- Lap surface line -->
+      <path d="M-65,20 Q0,5 65,20" fill="none" stroke="#90caf9" stroke-width="2"/>
+
+      <!-- Baby lying face down on lap -->
+      <!-- Baby body (horizontal) -->
+      <rect x="-35" y="-10" width="70" height="30" rx="12" fill="#fff9c4" stroke="#ffd54f" stroke-width="2"/>
+      <!-- Baby head (turned slightly) -->
+      <circle cx="-40" cy="-5" r="16" fill="#ffccbc" stroke="#ff8a65" stroke-width="1.5"/>
+      <!-- Baby eyes (one visible) -->
+      <circle cx="-44" cy="-7" r="2" fill="#303133"/>
+      <!-- Baby smile -->
+      <path d="M-44,0 Q-40,4 -36,0" fill="none" stroke="#303133" stroke-width="1.5"/>
+
+      <!-- Baby legs -->
+      <path d="M30,5 L45,15" fill="none" stroke="#ffccbc" stroke-width="6" stroke-linecap="round"/>
+      <path d="M30,15 L45,25" fill="none" stroke="#ffccbc" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- Parent hand supporting head -->
+      <path d="M-55,-5 Q-62,0 -58,10" fill="none" stroke="#ffccbc" stroke-width="7" stroke-linecap="round"/>
+
+      <!-- Parent other hand patting back -->
+      <ellipse cx="15" cy="-18" rx="10" ry="8" fill="#ffccbc" stroke="#ff8a65" stroke-width="1.5"/>
+      <!-- Pat motion lines -->
+      <path d="M22,-28 Q28,-33 22,-38" fill="none" stroke="#42a5f5" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <path d="M22,-24 Q30,-28 26,-34" fill="none" stroke="#42a5f5" stroke-width="1.5" stroke-dasharray="3,2"/>
+    </g>
+
+    <!-- Label -->
+    <text x="130" y="290" text-anchor="middle" class="label">趴卧拍嗝法</text>
+    <text x="130" y="315" text-anchor="middle" class="subtitle" font-size="12">腹部受压，更容易出嗝</text>
+
+    <!-- Steps -->
+    <text x="24" y="340" class="tip-text" font-size="12">• 让宝宝趴在大人腿上</text>
+    <text x="24" y="358" class="tip-text" font-size="12">• 头部略高于身体，侧向一边</text>
+    <text x="24" y="376" class="tip-text" font-size="12">• 轻拍或画圈按摩背部</text>
+  </g>
+
+  <!-- Bottom tips -->
+  <g transform="translate(30, 480)">
+    <rect x="0" y="0" width="840" height="32" rx="8" fill="#f0f9eb" stroke="#c8e6c9" stroke-width="1"/>
+    <text x="420" y="21" text-anchor="middle" class="tip-text" font-size="13">
+      拍嗝要点：喂奶后 5-10 分钟 · 空心掌从下往上轻拍 · 每次 1-3 分钟 · 拍不出也不必强求
+    </text>
+  </g>
+</svg>
