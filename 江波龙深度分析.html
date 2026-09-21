@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>江波龙深度分析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fafbfc;
+  --surface: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #5a6070;
+  --accent: #c0392b;
+  --accent-light: #e74c3c;
+  --green: #27ae60;
+  --navy: #1a3a5c;
+  --border: #e8eaef;
+  --chart-grid: #eef0f4;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --risk-bg: #fff8f0;
+  --risk-border: #f0c27a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1a2e;
+    --surface: #222244;
+    --text: #e8e8f0;
+    --text-secondary: #9a9ab0;
+    --border: #3a3a5a;
+    --chart-grid: #2e2e4a;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3);
+    --risk-bg: #2a2520;
+    --risk-border: #8a7040;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1a1a2e;
+  --surface: #222244;
+  --text: #e8e8f0;
+  --text-secondary: #9a9ab0;
+  --border: #3a3a5a;
+  --chart-grid: #2e2e4a;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  --risk-bg: #2a2520;
+  --risk-border: #8a7040;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  padding: 0 24px;
+  padding-block: 0;
+}
+.article {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 0 60px;
+}
+/* 标题区 */
+.article-header {
+  text-align: center;
+  padding-bottom: 32px;
+  border-bottom: 2px solid var(--navy);
+  margin-bottom: 40px;
+}
+.article-header .stock-tag {
+  display: inline-block;
+  background: var(--navy);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 16px;
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+.article-header h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1.3;
+  text-wrap: balance;
+  color: var(--text);
+}
+.article-header .subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-top: 12px;
+}
+/* 核心数据卡片区 */
+.key-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.metric-card .label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.metric-card .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--navy);
+}
+.metric-card .value.up { color: var(--accent); }
+.metric-card .value.down { color: var(--green); }
+.metric-card .sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+/* 章节 */
+.section {
+  margin-bottom: 40px;
+}
+.section h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+.section h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 24px 0 12px;
+}
+.section p {
+  font-size: 15px;
+  margin-bottom: 14px;
+  text-align: justify;
+}
+/* 数据表格 */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+}
+.data-table th {
+  background: var(--navy);
+  color: #fff;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 13px;
+}
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+.data-table tr:nth-child(even) td {
+  background: var(--bg);
+}
+.data-table .positive { color: var(--accent); font-weight: 500; }
+.data-table .negative { color: var(--green); font-weight: 500; }
+/* 图表容器 */
+.chart-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+}
+.chart-container svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.chart-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.chart-note {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+/* 要点列表 */
+.key-points {
+  list-style: none;
+  padding: 0;
+}
+.key-points li {
+  position: relative;
+  padding: 10px 0 10px 24px;
+  font-size: 15px;
+  border-bottom: 1px solid var(--border);
+}
+.key-points li:last-child { border-bottom: none; }
+.key-points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 16px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.key-points li strong { color: var(--navy); }
+/* 风险提示 */
+.risk-box {
+  background: var(--risk-bg);
+  border-left: 4px solid var(--risk-border);
+  border-radius: 0 4px 4px 0;
+  padding: 20px 24px;
+  margin-top: 40px;
+}
+.risk-box h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #c0392b;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.risk-box p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  line-height: 1.7;
+}
+.risk-box .disclaimer {
+  font-size: 13px;
+  font-weight: 700;
+  color: #c0392b;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--risk-border);
+}
+/* 作者信息 */
+.article-footer {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<article class="article">
+
+<!-- 标题区 -->
+<header class="article-header">
+  <span class="stock-tag">SZ301308</span>
+  <h1>深度分析：江波龙是否还能再创新高？</h1>
+  <p class="subtitle">存储周期上行 + AI 需求爆发，但高位回落 52% 后何去何从</p>
+</header>
+
+<!-- 核心数据 -->
+<div class="key-metrics">
+  <div class="metric-card">
+    <div class="label">最新股价</div>
+    <div class="value">¥349</div>
+    <div class="sub">较历史高点回落 53%</div>
+  </div>
+  <div class="metric-card">
+    <div class="label">总市值</div>
+    <div class="value">1,488亿</div>
+    <div class="sub">流通市值 978亿</div>
+  </div>
+  <div class="metric-card">
+    <div class="label">H1 净利润</div>
+    <div class="value up">+74,394%</div>
+    <div class="sub">同比暴增</div>
+  </div>
+  <div class="metric-card">
+    <div class="label">市盈率 PE</div>
+    <div class="value">12.3x</div>
+    <div class="sub">TTM</div>
+  </div>
+  <div class="metric-card">
+    <div class="label">利润率</div>
+    <div class="value">32.7%</div>
+    <div class="sub">过去12个月</div>
+  </div>
+</div>
+
+<!-- 第一部分：业绩数据 -->
+<section class="section">
+  <h2>一、业绩爆发：从 14 亿到百亿的量级跃迁</h2>
+  <p>
+    江波龙（301308）2026 年上半年的财务数据堪称"爆炸式增长"。公司预计上半年归母净利润达 <strong>92 亿–110 亿元</strong>，同比暴增 <strong>62,204% – 74,394%</strong>。这一增速在 A 股市场中极为罕见。
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>指标</th><th>2025全年</th><th>2026 Q1</th><th>2026 Q2</th><th>2026 H1 合计</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>营收（亿元）</td><td>227.66</td><td>99.09</td><td>141.80</td><td>240.89</td></tr>
+      <tr><td>营收同比</td><td class="positive">+30.4%</td><td class="positive">+132.8%</td><td class="positive">+138.7%</td><td class="positive">+136%</td></tr>
+      <tr><td>归母净利润（亿元）</td><td>14.23</td><td>38.62</td><td>67.15</td><td>105.77</td></tr>
+      <tr><td>净利同比</td><td class="positive">+185%</td><td class="positive">+2,644%</td><td class="positive">+3,931%</td><td class="positive">+74,394%</td></tr>
+      <tr><td>扣非EPS（元）</td><td>—</td><td>9.66</td><td>16.79</td><td>23.94</td></tr>
+    </tbody>
+  </table>
+
+  <div class="chart-container">
+    <div class="chart-title">图 1：江波龙 2025–2026 营收与净利润趋势</div>
+    <svg viewBox="0 0 700 320" role="img" aria-label="营收与净利润柱状图">
+      <!-- 网格 -->
+      <line x1="60" y1="30" x2="60" y2="260" stroke="var(--chart-grid)" stroke-width="1"/>
+      <line x1="60" y1="260" x2="680" y2="260" stroke="var(--chart-grid)" stroke-width="1"/>
+      <line x1="60" y1="200" x2="680" y2="200" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="60" y1="140" x2="680" y2="140" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="60" y1="80" x2="680" y2="80" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <!-- Y轴标签 -->
+      <text x="50" y="264" text-anchor="end" font-size="11" fill="var(--text-secondary)" font-family="monospace">0</text>
+      <text x="50" y="204" text-anchor="end" font-size="11" fill="var(--text-secondary)" font-family="monospace">50</text>
+      <text x="50" y="144" text-anchor="end" font-size="11" fill="var(--text-secondary)" font-family="monospace">100</text>
+      <text x="50" y="84" text-anchor="end" font-size="11" fill="var(--text-secondary)" font-family="monospace">150</text>
+      <text x="50" y="34" text-anchor="end" font-size="11" fill="var(--text-secondary)" font-family="monospace">200</text>
+      <!-- 营收柱 (蓝色) -->
+      <rect x="120" y="30" width="60" height="230" fill="#3498db" rx="2"/>
+      <rect x="240" y="108" width="60" height="152" fill="#3498db" rx="2"/>
+      <rect x="360" y="46" width="60" height="214" fill="#3498db" rx="2"/>
+      <rect x="480" y="34" width="60" height="226" fill="#3498db" rx="2"/>
+      <!-- 净利润柱 (红色) -->
+      <rect x="190" y="230" width="60" height="30" fill="#c0392b" rx="2"/>
+      <rect x="310" y="164" width="60" height="96" fill="#c0392b" rx="2"/>
+      <rect x="430" y="120" width="60" height="140" fill="#c0392b" rx="2"/>
+      <rect x="550" y="38" width="60" height="222" fill="#c0392b" rx="2"/>
+      <!-- X轴标签 -->
+      <text x="150" y="280" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="500">2025全年</text>
+      <text x="270" y="280" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="500">2026Q1</text>
+      <text x="390" y="280" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="500">2026Q2</text>
+      <text x="510" y="280" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="500">2026H1</text>
+      <!-- 数值标注 -->
+      <text x="150" y="24" text-anchor="middle" font-size="11" fill="#3498db" font-weight="500">228亿</text>
+      <text x="270" y="102" text-anchor="middle" font-size="11" fill="#3498db" font-weight="500">99亿</text>
+      <text x="390" y="40" text-anchor="middle" font-size="11" fill="#3498db" font-weight="500">142亿</text>
+      <text x="510" y="28" text-anchor="middle" font-size="11" fill="#3498db" font-weight="500">241亿</text>
+      <text x="220" y="224" text-anchor="middle" font-size="10" fill="#c0392b" font-weight="500">14亿</text>
+      <text x="340" y="158" text-anchor="middle" font-size="10" fill="#c0392b" font-weight="500">39亿</text>
+      <text x="460" y="114" text-anchor="middle" font-size="10" fill="#c0392b" font-weight="500">67亿</text>
+      <text x="580" y="32" text-anchor="middle" font-size="10" fill="#c0392b" font-weight="500">106亿</text>
+      <!-- 图例 -->
+      <rect x="540" y="290" width="12" height="12" fill="#3498db" rx="2"/>
+      <text x="558" y="300" font-size="11" fill="var(--text-secondary)">营收</text>
+      <rect x="600" y="290" width="12" height="12" fill="#c0392b" rx="2"/>
+      <text x="618" y="300" font-size="11" fill="var(--text-secondary)">净利润</text>
+    </svg>
+    <p class="chart-note">数据来源：公司公告 / 新浪财经</p>
+  </div>
+
+  <h3>增长驱动力拆解</h3>
+  <ul class="key-points">
+    <li><strong>存储超级周期：</strong>全球 NAND Flash 和 DRAM 价格在 2025Q4 至 2026H1 期间大幅上涨，NAND 合约价累计涨幅超 80%，江波龙作为存储模组龙头直接受益</li>
+    <li><strong>AI 端侧需求爆发：</strong>AI 手机、AI PC、AI 眼镜等新型终端对大容量存储的需求激增，ePOP 嵌入式存储芯片出货量大幅增长</li>
+    <li><strong>自研芯片战略落地：</strong>公司自研主控芯片和固件方案逐步成熟，产品毛利率从 2025 年的约 15% 跃升至 32.7%</li>
+    <li><strong>与 AMD 深度合作：</strong>联合优化 SSD 解决方案，DRAM 用量降低 40%，成本优势显著</li>
+  </ul>
+</section>
+
+<!-- 第二部分：股价走势 -->
+<section class="section">
+  <h2>二、股价走势：749 元巅峰到 349 元的深度回调</h2>
+  <p>
+    江波龙的股价走势堪称"过山车"。2026 年初，受存储涨价和 AI 概念双重催化，股价从约 130 元一路飙升至盘中最高点 <strong>749.88 元</strong>，涨幅超过 470%。随后获利盘涌出，股价大幅回落至目前的 349 元左右，较高点回撤约 <strong>53%</strong>。
+  </p>
+
+  <div class="chart-container">
+    <div class="chart-title">图 2：江波龙 2026 年股价走势（关键节点）</div>
+    <svg viewBox="0 0 700 300" role="img" aria-label="股价走势图">
+      <!-- 网格 -->
+      <line x1="60" y1="30" x2="60" y2="250" stroke="var(--chart-grid)" stroke-width="1"/>
+      <line x1="60" y1="250" x2="680" y2="250" stroke="var(--chart-grid)" stroke-width="1"/>
+      <line x1="60" y1="195" x2="680" y2="195" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="60" y1="140" x2="680" y2="140" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="60" y1="85" x2="680" y2="85" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="60" y1="30" x2="680" y2="30" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <!-- Y轴标签 -->
+      <text x="50" y="254" text-anchor="end" font-size="11" fill="var(--text-secondary)" font-family="monospace">100</text>
+      <text x="50" y="199" text-anchor="end" font-size="11" fill="var(--text-secondary)" font-family="monospace">300</text>
+      <text x="50" y="144" text-anchor="end" font-size="11" fill="var(--text-secondary)" font-family="monospace">500</text>
+      <text x="50" y="89" text-anchor="end" font-size="11" fill="var(--text-secondary)" font-family="monospace">700</text>
+      <text x="50" y="34" text-anchor="end" font-size="11" fill="var(--text-secondary)" font-family="monospace">800</text>
+      <!-- 股价折线 -->
+      <polyline points="60,240 140,235 220,180 300,90 380,55 420,30 460,70 520,130 580,170 640,195"
+                fill="none" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- 填充区域 -->
+      <polygon points="60,240 140,235 220,180 300,90 380,55 420,30 460,70 520,130 580,170 640,195 640,250 60,250"
+               fill="#c0392b" opacity="0.08"/>
+      <!-- 关键点标注 -->
+      <circle cx="60" cy="240" r="4" fill="#3498db"/>
+      <text x="60" y="268" text-anchor="middle" font-size="10" fill="var(--text-secondary)">年初~130元</text>
+      <circle cx="420" cy="30" r="5" fill="#c0392b"/>
+      <text x="420" y="20" text-anchor="middle" font-size="12" fill="#c0392b" font-weight="700">749.88（历史高点）</text>
+      <circle cx="640" cy="195" r="4" fill="#27ae60"/>
+      <text x="640" y="218" text-anchor="middle" font-size="11" fill="#27ae60" font-weight="500">当前~349元</text>
+      <!-- 回撤箭头 -->
+      <line x1="440" y1="40" x2="620" y2="180" stroke="#888" stroke-width="1" stroke-dasharray="4"/>
+      <text x="540" y="100" text-anchor="middle" font-size="11" fill="#888">回撤 53%</text>
+      <!-- X轴标签 -->
+      <text x="140" y="278" text-anchor="middle" font-size="11" fill="var(--text-secondary)">2月</text>
+      <text x="300" y="278" text-anchor="middle" font-size="11" fill="var(--text-secondary)">4月</text>
+      <text x="420" y="278" text-anchor="middle" font-size="11" fill="var(--text-secondary)">5月高点</text>
+      <text x="580" y="278" text-anchor="middle" font-size="11" fill="var(--text-secondary)">7月</text>
+      <text x="640" y="278" text-anchor="middle" font-size="11" fill="var(--text-secondary)">9月</text>
+    </svg>
+    <p class="chart-note">数据来源：新浪财经 / 东方财富（截至2026年9月）</p>
+  </div>
+
+  <h3>回调原因分析</h3>
+  <ul class="key-points">
+    <li><strong>获利盘兑现：</strong>从 130 元到 749 元的涨幅过于迅猛，大量早期投资者选择高位套现</li>
+    <li><strong>港股发行折价冲击：</strong>H 股发行价较同期 A 股折价约 44%，上市首日破发，对 A 股估值形成压力</li>
+    <li><strong>市场情绪降温：</strong>存储涨价预期逐步兑现后，市场开始关注"周期顶点"风险</li>
+    <li><strong>估值回归：</strong>前期 PE 一度超过 50 倍，回调后 PE 降至 12.3 倍，估值趋于合理</li>
+  </ul>
+</section>
+
+<!-- 第三部分：估值分析 -->
+<section class="section">
+  <h2>三、估值水平：12 倍 PE 是否足够便宜？</h2>
+  <p>
+    当前江波龙的估值指标如下：
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>估值指标</th><th>当前值</th><th>行业平均</th><th>评价</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>市盈率 (PE TTM)</td><td>12.3x</td><td>25–35x</td><td class="negative">偏低</td></tr>
+      <tr><td>市净率 (PB)</td><td>7.63x</td><td>4–6x</td><td class="positive">偏高</td></tr>
+      <tr><td>市销率 (PS)</td><td>4.10x</td><td>3–5x</td><td>合理</td></tr>
+      <tr><td>利润率</td><td>32.69%</td><td>10–15%</td><td class="negative">远超行业</td></tr>
+      <tr><td>ROA</td><td>29.18%</td><td>5–10%</td><td class="negative">远超行业</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    <strong>PE 12.3 倍</strong> 在半导体存储行业中属于偏低水平，但这主要是因为当前利润处于周期顶峰。市场普遍预期存储价格在 2026H2 至 2027 年可能见顶回落，因此给予的 PE 倍数较为保守。
+  </p>
+  <p>
+    值得注意的是，<strong>32.7% 的利润率</strong>和 <strong>29.2% 的 ROA</strong> 远超行业平均水平，这主要得益于存储涨价带来的短期利润释放。一旦周期转向，这些指标可能快速回落。
+  </p>
+
+  <div class="chart-container">
+    <div class="chart-title">图 3：江波龙 vs 同行业估值对比</div>
+    <svg viewBox="0 0 700 280" role="img" aria-label="同行业估值对比柱状图">
+      <!-- 网格 -->
+      <line x1="80" y1="30" x2="80" y2="230" stroke="var(--chart-grid)" stroke-width="1"/>
+      <line x1="80" y1="230" x2="680" y2="230" stroke="var(--chart-grid)" stroke-width="1"/>
+      <line x1="80" y1="180" x2="680" y2="180" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="80" y1="130" x2="680" y2="130" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="80" y1="80" x2="680" y2="80" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="80" y1="30" x2="680" y2="30" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <!-- Y轴 -->
+      <text x="70" y="234" text-anchor="end" font-size="11" fill="var(--text-secondary)">0x</text>
+      <text x="70" y="184" text-anchor="end" font-size="11" fill="var(--text-secondary)">10x</text>
+      <text x="70" y="134" text-anchor="end" font-size="11" fill="var(--text-secondary)">20x</text>
+      <text x="70" y="84" text-anchor="end" font-size="11" fill="var(--text-secondary)">30x</text>
+      <text x="70" y="34" text-anchor="end" font-size="11" fill="var(--text-secondary)">40x</text>
+      <!-- 公司对比柱 -->
+      <rect x="120" y="170" width="80" height="60" fill="#3498db" rx="2"/>
+      <text x="160" y="164" text-anchor="middle" font-size="12" fill="#3498db" font-weight="500">12.3x</text>
+      <text x="160" y="250" text-anchor="middle" font-size="12" fill="var(--text)" font-weight="500">江波龙</text>
+
+      <rect x="250" y="105" width="80" height="125" fill="#95a5a6" rx="2"/>
+      <text x="290" y="99" text-anchor="middle" font-size="12" fill="#95a5a6" font-weight="500">25x</text>
+      <text x="290" y="250" text-anchor="middle" font-size="12" fill="var(--text-secondary)">存储行业</text>
+
+      <rect x="380" y="60" width="80" height="170" fill="#95a5a6" rx="2"/>
+      <text x="420" y="54" text-anchor="middle" font-size="12" fill="#95a5a6" font-weight="500">35x</text>
+      <text x="420" y="250" text-anchor="middle" font-size="12" fill="var(--text-secondary)">半导体</text>
+
+      <rect x="510" y="105" width="80" height="125" fill="#95a5a6" rx="2"/>
+      <text x="550" y="99" text-anchor="middle" font-size="12" fill="#95a5a6" font-weight="500">25x</text>
+      <text x="550" y="250" text-anchor="middle" font-size="12" fill="var(--text-secondary)">A股均值</text>
+
+      <!-- 江波龙高亮 -->
+      <rect x="115" y="165" width="90" height="70" fill="none" stroke="#c0392b" stroke-width="2" rx="3"/>
+    </svg>
+    <p class="chart-note">PE (TTM) 对比 | 数据来源：Wind / 同花顺</p>
+  </div>
+</section>
+
+<!-- 第四部分：核心逻辑 -->
+<section class="section">
+  <h2>四、能否再创新高？多空博弈分析</h2>
+
+  <h3>🟢 看多逻辑：支撑创新高的三大理由</h3>
+  <ul class="key-points">
+    <li><strong>存储周期尚未见顶：</strong>NAND 和 DRAM 价格在 2026H1 仍在上涨，主要厂商（三星、SK 海力士、美光）纷纷上调资本开支，说明行业对涨价持续性有信心。若涨价延续至 2027 年，江波龙利润仍有上行空间</li>
+    <li><strong>AI 存储需求是长期趋势：</strong>端侧 AI（AI 手机/PC/眼镜）对大容量存储的需求是结构性的，不是短期炒作。江波龙在 ePOP 等嵌入式存储领域的布局将长期受益</li>
+    <li><strong>12 倍 PE 具备安全边际：</strong>即使利润回落 50%，PE 仍为 24 倍，处于行业合理区间。当前 349 元的股价已大幅消化了前期泡沫</li>
+  </ul>
+
+  <h3>🔴 看空逻辑：制约创新高的四大风险</h3>
+  <ul class="key-points">
+    <li><strong>周期顶点风险：</strong>存储行业是典型的周期性行业，历史上每轮涨价周期约 2-3 年。2025Q4 启动的本轮涨价已进入第 3 个季度，市场担心 2026H2 或 2027 年可能出现拐点</li>
+    <li><strong>利润不可持续：</strong>32.7% 的利润率是涨价周期带来的"超额利润"，一旦价格回落，利润率可能快速回归 10-15% 的正常水平，对应净利润将大幅下降</li>
+    <li><strong>H 股折价压力：</strong>H 股发行价大幅低于 A 股，形成"比价效应"，对 A 股估值构成长期压制</li>
+    <li><strong>高位套牢盘压力：</strong>749 元高点附近积累了大量套牢盘，股价每向上突破一个关口都会面临解套抛压</li>
+  </ul>
+
+  <div class="chart-container">
+    <div class="chart-title">图 4：情景分析 — 不同假设下的目标价</div>
+    <svg viewBox="0 0 700 260" role="img" aria-label="情景分析图">
+      <!-- 网格 -->
+      <line x1="80" y1="30" x2="80" y2="210" stroke="var(--chart-grid)" stroke-width="1"/>
+      <line x1="80" y1="210" x2="680" y2="210" stroke="var(--chart-grid)" stroke-width="1"/>
+      <line x1="80" y1="165" x2="680" y2="165" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="80" y1="120" x2="680" y2="120" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <line x1="80" y1="75" x2="680" y2="75" stroke="var(--chart-grid)" stroke-width="0.5" stroke-dasharray="4"/>
+      <!-- Y轴 -->
+      <text x="70" y="214" text-anchor="end" font-size="11" fill="var(--text-secondary)">0</text>
+      <text x="70" y="169" text-anchor="end" font-size="11" fill="var(--text-secondary)">200</text>
+      <text x="70" y="124" text-anchor="end" font-size="11" fill="var(--text-secondary)">400</text>
+      <text x="70" y="79" text-anchor="end" font-size="11" fill="var(--text-secondary)">600</text>
+      <text x="70" y="34" text-anchor="end" font-size="11" fill="var(--text-secondary)">800</text>
+      <!-- 悲观情景 -->
+      <rect x="130" y="140" width="100" height="70" fill="#e74c3c" rx="3" opacity="0.8"/>
+      <text x="180" y="130" text-anchor="middle" font-size="14" fill="#e74c3c" font-weight="700">250–300元</text>
+      <text x="180" y="178" text-anchor="middle" font-size="11" fill="#fff" font-weight="500">悲观</text>
+      <text x="180" y="230" text-anchor="middle" font-size="11" fill="var(--text-secondary)">周期见顶</text>
+      <!-- 中性情景 -->
+      <rect x="290" y="95" width="100" height="115" fill="#f39c12" rx="3" opacity="0.8"/>
+      <text x="340" y="85" text-anchor="middle" font-size="14" fill="#f39c12" font-weight="700">400–500元</text>
+      <text x="340" y="155" text-anchor="middle" font-size="11" fill="#fff" font-weight="500">中性</text>
+      <text x="340" y="230" text-anchor="middle" font-size="11" fill="var(--text-secondary)">周期延续</text>
+      <!-- 乐观情景 -->
+      <rect x="450" y="40" width="100" height="170" fill="#27ae60" rx="3" opacity="0.8"/>
+      <text x="500" y="30" text-anchor="middle" font-size="14" fill="#27ae60" font-weight="700">550–700元</text>
+      <text x="500" y="130" text-anchor="middle" font-size="11" fill="#fff" font-weight="500">乐观</text>
+      <text x="500" y="230" text-anchor="middle" font-size="11" fill="var(--text-secondary)">AI持续爆发</text>
+      <!-- 当前价线 -->
+      <line x1="100" y1="155" x2="660" y2="155" stroke="#1a3a5c" stroke-width="1.5" stroke-dasharray="6"/>
+      <text x="665" y="150" font-size="11" fill="#1a3a5c" font-weight="500">当前 349元</text>
+      <!-- 历史高点线 -->
+      <line x1="100" y1="40" x2="660" y2="40" stroke="#c0392b" stroke-width="1" stroke-dasharray="4"/>
+      <text x="665" y="36" font-size="10" fill="#c0392b">历史高点 749元</text>
+    </svg>
+    <p class="chart-note">情景分析基于不同周期假设，仅供参考</p>
+  </div>
+</section>
+
+<!-- 第五部分：技术面 -->
+<section class="section">
+  <h2>五、技术面：关键支撑与阻力位</h2>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>位置</th><th>价格区间</th><th>技术含义</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>强阻力</strong></td><td>500–550 元</td><td>前期平台底部，大量套牢盘</td></tr>
+      <tr><td><strong>阻力</strong></td><td>420–450 元</td><td>60 日均线附近</td></tr>
+      <tr><td><strong>当前</strong></td><td>340–360 元</td><td>短期震荡区间</td></tr>
+      <tr><td><strong>支撑</strong></td><td>300–320 元</td><td>前期低点，心理关口</td></tr>
+      <tr><td><strong>强支撑</strong></td><td>250–280 元</td><td>半年线位置，长期成本区</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    从技术面看，当前股价处于 <strong>300–400 元的震荡区间</strong>。若要再创新高，首先需要突破 500 元的强阻力位，这需要<strong>持续的成交量配合</strong>和<strong>基本面的持续催化</strong>。
+  </p>
+  <p>
+    52 周的成交量数据显示，股价在 749 元高点附近成交额高达 40 亿元/日，而当前成交额约 40 亿元，说明市场关注度仍在，但买盘力度较前期明显减弱。
+  </p>
+</section>
+
+<!-- 第六部分：结论 -->
+<section class="section">
+  <h2>六、结论：创新高的概率与路径</h2>
+
+  <p><strong>综合判断：</strong>江波龙短期内（3-6 个月）再次触及 749 元历史新高的<strong>概率较低</strong>，主要原因如下：</p>
+
+  <ul class="key-points">
+    <li>存储涨价周期可能在未来 1-2 个季度内见顶，利润增速将放缓</li>
+    <li>500 元上方套牢盘压力巨大，需要极强的催化才能突破</li>
+    <li>H 股折价效应持续压制 A 股估值</li>
+  </ul>
+
+  <p><strong>但中长期（1-2 年）仍存在创新高的可能性，前提是：</strong></p>
+
+  <ul class="key-points">
+    <li>AI 端侧存储需求持续超预期，形成新的增长曲线</li>
+    <li>公司自研芯片战略成功，毛利率维持高位</li>
+    <li>存储行业进入"超级周期"，涨价延续至 2027 年</li>
+  </ul>
+
+  <p>
+    <strong>操作建议思路：</strong>当前 349 元的价位处于相对合理区间，PE 12 倍具备一定安全边际。对于长期看好存储 + AI 赛道的投资者，可以考虑在 <strong>300–350 元区间分批布局</strong>；对于短线交易者，则需关注 <strong>420 元阻力位</strong>的突破情况，放量突破方可看高一线。
+  </p>
+</section>
+
+<!-- 风险提示 -->
+<div class="risk-box">
+  <h3>⚠️ 风险提示与免责声明</h3>
+  <p>
+    <strong>一、行业周期风险：</strong>存储芯片行业具有明显的周期性特征，价格波动剧烈。历史上 NAND Flash 和 DRAM 价格曾出现过单季度下跌 30% 以上的情况，可能导致公司利润大幅缩水。
+  </p>
+  <p>
+    <strong>二、估值波动风险：</strong>当前 32.7% 的利润率和 29.2% 的 ROA 处于历史高位，主要得益于存储涨价周期。一旦周期转向，这些指标可能快速回落，导致估值中枢下移。
+  </p>
+  <p>
+    <strong>三、股价波动风险：</strong>江波龙股价在 2026 年曾从 130 元涨至 749 元，后又回落至 349 元，波动幅度极大。投资者需警惕类似的大幅波动风险。
+  </p>
+  <p>
+    <strong>四、H 股比价风险：</strong>H 股发行价较 A 股大幅折价，可能形成长期估值压制。
+  </p>
+  <p>
+    <strong>五、宏观风险：</strong>全球经济放缓、地缘政治冲突、贸易摩擦等宏观因素可能影响存储行业需求。
+  </p>
+  <p class="disclaimer">
+    ⛔ 本文仅为个人研究分析，不构成任何投资建议。股市有风险，投资需谨慎。请根据自身风险承受能力独立做出投资决策。
+  </p>
+</div>
+
+<!-- 页脚 -->
+<footer class="article-footer">
+  <p>数据来源：公司公告、新浪财经、东方财富、Wind | 截至 2026 年 9 月</p>
+  <p>本文基于公开信息分析，力求客观准确，但不保证信息完全无误</p>
+</footer>
+
+</article>
+</body>
+</html>

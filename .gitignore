@@ -38,3 +38,13 @@ coverage/
 
 # Generated knowledge index
 server/src/services/knowledge-index.json
+
+# Generated videos
+*.mp4
+
+# Temp files
+temp_audio*
+temp_transcript*
+temp_tts/
+temp_scenes/
+temp_audio_stz/

@@ -3,7 +3,23 @@
     <div class="chat-container">
       <!-- 欢迎语 -->
       <div v-if="messages.length === 0" class="welcome">
-        <div class="welcome-icon"></div>
+        <div class="welcome-icon">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="40" r="40" fill="url(#welcomeGrad)"/>
+            <path d="M25 38c0-8.3 6.7-15 15-15s15 6.7 15 15c0 8.3-6.7 15-15 15s-15-6.7-15-15z" fill="#fff" opacity="0.95"/>
+            <circle cx="34" cy="36" r="2.5" fill="#409eff"/>
+            <circle cx="46" cy="36" r="2.5" fill="#409eff"/>
+            <path d="M33 44a8 8 0 0014 0" stroke="#409eff" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+            <!-- 奶瓶 -->
+            <rect x="50" y="48" width="10" height="15" rx="3.5" fill="#fff" opacity="0.9"/>
+            <rect x="53.5" y="43" width="3" height="6" rx="1.5" fill="#fff" opacity="0.7"/>
+            <!-- 小星星装饰 -->
+            <circle cx="16" cy="22" r="2" fill="#fff" opacity="0.6"/>
+            <circle cx="66" cy="18" r="1.5" fill="#fff" opacity="0.5"/>
+            <circle cx="62" cy="62" r="1.8" fill="#fff" opacity="0.4"/>
+            <defs><linearGradient id="welcomeGrad" x1="0" y1="0" x2="80" y2="80"><stop stop-color="#409eff"/><stop offset="1" stop-color="#67c23a"/></linearGradient></defs>
+          </svg>
+        </div>
         <h1>BabyWiki 智能育儿助手</h1>
         <p>基于 500+ 篇专业育儿文章，为你解答育儿问题</p>
         <div class="quick-questions">
@@ -20,8 +36,28 @@
       <div v-else class="messages" ref="messagesRef">
         <div v-for="(msg, i) in messages" :key="i" class="message" :class="msg.role">
           <div class="message-avatar">
-            <template v-if="msg.role === 'user'">👤</template>
-            <template v-else></template>
+            <!-- AI 头像 -->
+            <template v-if="msg.role === 'ai'">
+              <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="18" cy="18" r="18" fill="url(#aiGrad)"/>
+                <path d="M12 17a6 6 0 0112 0c0 3.3-2.7 6-6 6s-6-2.7-6-6z" fill="#fff" opacity="0.95"/>
+                <circle cx="14.5" cy="16" r="1.2" fill="#409eff"/>
+                <circle cx="21.5" cy="16" r="1.2" fill="#409eff"/>
+                <path d="M15.5 19.5a3.5 3.5 0 005 0" stroke="#409eff" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+                <!-- 小奶瓶 -->
+                <rect x="22" y="22" width="5" height="7" rx="2" fill="#fff" opacity="0.85"/>
+                <rect x="23.5" y="20" width="2" height="3" rx="1" fill="#fff" opacity="0.7"/>
+                <defs><linearGradient id="aiGrad" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#409eff"/><stop offset="1" stop-color="#67c23a"/></linearGradient></defs>
+              </svg>
+            </template>
+            <!-- 用户头像 -->
+            <template v-else>
+              <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="18" cy="18" r="18" fill="#e8edf3"/>
+                <circle cx="18" cy="13" r="5" fill="#90a4ae"/>
+                <path d="M9 28c0-4.4 4-7.5 9-7.5s9 3.1 9 7.5" fill="#90a4ae"/>
+              </svg>
+            </template>
           </div>
           <div class="message-content">
             <div class="message-text" v-html="renderMarkdown(msg.content)"></div>
@@ -40,7 +76,18 @@
 
         <!-- 加载中 -->
         <div v-if="loading" class="message ai">
-          <div class="message-avatar"></div>
+          <div class="message-avatar">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="18" cy="18" r="18" fill="url(#aiGrad2)"/>
+              <path d="M12 17a6 6 0 0112 0c0 3.3-2.7 6-6 6s-6-2.7-6-6z" fill="#fff" opacity="0.95"/>
+              <circle cx="14.5" cy="16" r="1.2" fill="#409eff"/>
+              <circle cx="21.5" cy="16" r="1.2" fill="#409eff"/>
+              <path d="M15.5 19.5a3.5 3.5 0 005 0" stroke="#409eff" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+              <rect x="22" y="22" width="5" height="7" rx="2" fill="#fff" opacity="0.85"/>
+              <rect x="23.5" y="20" width="2" height="3" rx="1" fill="#fff" opacity="0.7"/>
+              <defs><linearGradient id="aiGrad2" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#409eff"/><stop offset="1" stop-color="#67c23a"/></linearGradient></defs>
+            </svg>
+          </div>
           <div class="message-content">
             <div class="typing">
               <span></span><span></span><span></span>
@@ -218,8 +265,12 @@ onMounted(() => {
 }
 
 .welcome-icon {
-  font-size: 64px;
   margin-bottom: 16px;
+}
+
+.welcome-icon svg {
+  width: 80px;
+  height: 80px;
 }
 
 .welcome h1 {
@@ -320,18 +371,16 @@ onMounted(() => {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #f0f0f0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
-.message.ai .message-avatar {
-  background: linear-gradient(135deg, #409eff, #67c23a);
-  color: #fff;
-  font-size: 14px;
+.message-avatar svg {
+  width: 100%;
+  height: 100%;
 }
 
 .message-content {
